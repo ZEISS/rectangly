@@ -12,6 +12,7 @@ import {
 import * as React from 'react';
 import { render } from 'react-dom';
 import { createContextProvider } from './contextProvider';
+import { ComponentRegistryEntry } from './types';
 
 interface CustomReactElement {
   kind: 'element';
@@ -63,6 +64,28 @@ function convertReact(node: CustomReactNode): React.ReactNode {
   return undefined;
 }
 
+function log(...args: Array<any>) {
+  if (process.env.NODE_ENV !== 'production') {
+    console.log(args);
+  }
+}
+
+const componentRegistry = {};
+
+function getComponent(name: string, prefix?: string) {
+  const components = prefix && componentRegistry[prefix];
+  if (components && components[name]) {
+    return components[name];
+  }
+  return undefined;
+}
+
+export function registerComponents(prefix: string, components: { [name: string]: any }) {
+  if (!componentRegistry[prefix]) {
+    componentRegistry[prefix] = components;
+  }
+}
+
 export class ReactRenderer extends Renderer2 {
   data: { [key: string]: any };
   private root: Element | null;
@@ -74,19 +97,31 @@ export class ReactRenderer extends Renderer2 {
   };
   private sid = 0;
   private provider: React.ComponentType<any>;
-  private reactElementCreator: any | undefined;
+  private rootElementSelector: any | undefined;
 
-  constructor(context: any, reactElementCreator?: any) {
+  constructor(context: any, rootElementSelector?: ComponentRegistryEntry | any) {
     super();
+
+    if (typeof rootElementSelector === 'object') {
+      registerComponents(rootElementSelector.prefix, rootElementSelector.components);
+    } else if (typeof rootElementSelector === 'function') {
+      this.rootElementSelector = rootElementSelector;
+    }
     this.provider = createContextProvider(context);
-    this.reactElementCreator = reactElementCreator;
   }
 
   createElement(name: string, namespace?: string | null | undefined): any {
-    console.log('createElement', name, namespace);
+    log('createElement', name, namespace);
+    const prefix = name.indexOf('-') ? name.substr(0, name.indexOf('-')) : undefined;
+    const cleanName = prefix && prefix.length ? name.substr(prefix.length + 1) : name;
+    const type =
+      (this.rootElementSelector && this.rootElementSelector(prefix, cleanName)) ||
+      getComponent(cleanName, prefix) ||
+      name;
+
     return {
       kind: 'element',
-      type: this.reactElementCreator ? this.reactElementCreator(name) : 'div',
+      type: type,
       children: [],
       props: {
         key: this.nextKey(),
@@ -95,7 +130,7 @@ export class ReactRenderer extends Renderer2 {
   }
 
   createText(value: string): any {
-    console.log('createText', value);
+    log('createText', value);
     return {
       kind: 'primitive',
       value,
@@ -103,7 +138,7 @@ export class ReactRenderer extends Renderer2 {
   }
 
   selectRootElement(selectorOrNode: any): any {
-    console.log('selectRootElement', selectorOrNode);
+    log('selectRootElement', selectorOrNode);
 
     if (typeof selectorOrNode === 'string') {
       this.root = document.querySelector(selectorOrNode) || document.body;
@@ -117,7 +152,7 @@ export class ReactRenderer extends Renderer2 {
   }
 
   listen(target: any, eventName: string, callback: (event: any) => boolean | void): () => void {
-    console.log('listen', target, eventName, callback);
+    log('listen', target, eventName, callback);
     target.props[eventName] = callback;
     return () => {
       this.setProperty(target, eventName, undefined);
@@ -125,7 +160,7 @@ export class ReactRenderer extends Renderer2 {
   }
 
   destroy(): void {
-    console.log('destroy');
+    log('destroy');
     // tslint:disable-next-line
     this.root = null;
     this.element.children = [];
@@ -133,7 +168,7 @@ export class ReactRenderer extends Renderer2 {
   }
 
   createComment(value: string): any {
-    console.log('createComment', value);
+    log('createComment', value);
     return {
       kind: 'comment',
       value,
@@ -141,18 +176,18 @@ export class ReactRenderer extends Renderer2 {
   }
 
   appendChild(parent: any, newChild: any): void {
-    console.log('appendChild', parent, newChild);
+    log('appendChild', parent, newChild);
     parent.children.push(newChild);
   }
 
   insertBefore(parent: any, newChild: any, refChild: any): void {
-    console.log('insertBefore', parent, newChild, refChild);
+    log('insertBefore', parent, newChild, refChild);
     const refIndex = parent.children.indexOf(refChild);
     parent.children.splice(refIndex, 0, newChild);
   }
 
   removeChild(parent: any, oldChild: any): void {
-    console.log('removeChild', parent, oldChild);
+    log('removeChild', parent, oldChild);
     const index = parent.children.indexOf(oldChild);
 
     if (index !== -1) {
@@ -161,12 +196,12 @@ export class ReactRenderer extends Renderer2 {
   }
 
   parentNode(node: any): any {
-    console.log('parentNode', node);
+    log('parentNode', node);
     return findParent(this.element, node);
   }
 
   nextSibling(node: any): any {
-    console.log('nextSibling', node);
+    log('nextSibling', node);
     const parent = findParent(this.element, node);
 
     if (parent) {
@@ -178,7 +213,7 @@ export class ReactRenderer extends Renderer2 {
   }
 
   setAttribute(el: any, name: string, value: string, namespace?: string | null | undefined): void {
-    console.log('setAttribute', el, name, value, namespace);
+    log('setAttribute', el, name, value, namespace);
     el.props[name] = value;
   }
 
@@ -187,14 +222,14 @@ export class ReactRenderer extends Renderer2 {
   }
 
   render() {
-    console.log('Rendering ...');
+    log('Rendering ...');
     const elements = this.element.children.map(convertReact);
     const context = React.createElement(this.provider, undefined, elements);
     render(context, this.root);
   }
 
   removeAttribute(el: any, name: string, namespace?: string | null | undefined): void {
-    console.log('removeAttribute', el, name, namespace);
+    log('removeAttribute', el, name, namespace);
 
     if (el) {
       delete el.props[name];
@@ -202,7 +237,7 @@ export class ReactRenderer extends Renderer2 {
   }
 
   addClass(el: any, name: string): void {
-    console.log('addClass', el, name);
+    log('addClass', el, name);
     const cls = el.props.className || '';
     const classes = cls.split(' ');
 
@@ -213,7 +248,7 @@ export class ReactRenderer extends Renderer2 {
   }
 
   removeClass(el: any, name: string): void {
-    console.log('removeClass', el, name);
+    log('removeClass', el, name);
     const cls = el.props.className || '';
     const classes = cls.split(' ');
     const index = classes.indexOf(name);
@@ -225,7 +260,7 @@ export class ReactRenderer extends Renderer2 {
   }
 
   setStyle(el: any, style: string, value: any, flags?: RendererStyleFlags2 | undefined): void {
-    console.log('setStyle', el, style, value, flags);
+    log('setStyle', el, style, value, flags);
     const obj = el.props.style || {};
     el.props.style = {
       ...obj,
@@ -234,13 +269,13 @@ export class ReactRenderer extends Renderer2 {
   }
 
   removeStyle(el: any, style: string, flags?: RendererStyleFlags2 | undefined): void {
-    console.log('removeStyle', el, style, flags);
+    log('removeStyle', el, style, flags);
     const { [style]: _deleted, ...obj } = el.props.style || {};
     el.props.style = obj;
   }
 
   setProperty(el: any, name: string, value: any): void {
-    console.log('setProperty', el, name, value);
+    log('setProperty', el, name, value);
 
     if (name === 'value' && el.props.value === undefined) {
       // edge case; Angular does not spit out bound values on first render;
@@ -251,7 +286,7 @@ export class ReactRenderer extends Renderer2 {
   }
 
   setValue(node: any, value: string): void {
-    console.log('setValue', node, value);
+    log('setValue', node, value);
     node.value = value;
   }
 }

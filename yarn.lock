@@ -29,6 +29,10 @@
   dependencies:
     csstype "^2.2.0"
 
+"@zeiss/pharos@^0.3.5":
+  version "0.3.5"
+  resolved "https://zeissgroup.pkgs.visualstudio.com/_packaging/SIP/npm/registry/@zeiss/pharos/-/pharos-0.3.5.tgz#06d51b727f6da77f0adef2f0516d1dad4bad6fc1"
+
 abab@^1.0.3:
   version "1.0.4"
   resolved "https://zeissgroup.pkgs.visualstudio.com/_packaging/SIP/npm/registry/abab/-/abab-1.0.4.tgz#5faad9c2c07f60dd76770f71cf025b62a63cfd4e"
@@ -388,6 +392,10 @@ balanced-match@^1.0.0:
   version "1.0.0"
   resolved "https://zeissgroup.pkgs.visualstudio.com/_packaging/SIP/npm/registry/balanced-match/-/balanced-match-1.0.0.tgz#89b4d199ab2bee49de164ea02b89ce462d71b767"
 
+base64-js@^1.0.2:
+  version "1.3.0"
+  resolved "https://zeissgroup.pkgs.visualstudio.com/_packaging/SIP/npm/registry/base64-js/-/base64-js-1.3.0.tgz#cab1e6118f051095e58b5281aea8c1cd22bfc0e3"
+
 base@^0.11.1:
   version "0.11.2"
   resolved "https://zeissgroup.pkgs.visualstudio.com/_packaging/SIP/npm/registry/base/-/base-0.11.2.tgz#7bde5ced145b6d551a90db87f83c558b4eb48a8f"
@@ -455,6 +463,13 @@ bser@^2.0.0:
 buffer-from@^1.0.0:
   version "1.0.0"
   resolved "https://zeissgroup.pkgs.visualstudio.com/_packaging/SIP/npm/registry/buffer-from/-/buffer-from-1.0.0.tgz#4cb8832d23612589b0406e9e2956c17f06fdf531"
+
+buffer@^5.0.3:
+  version "5.1.0"
+  resolved "https://zeissgroup.pkgs.visualstudio.com/_packaging/SIP/npm/registry/buffer/-/buffer-5.1.0.tgz#c913e43678c7cb7c8bd16afbcddb6c5505e8f9fe"
+  dependencies:
+    base64-js "^1.0.2"
+    ieee754 "^1.1.4"
 
 builtin-modules@^1.0.0, builtin-modules@^1.1.1:
   version "1.1.1"
@@ -682,6 +697,18 @@ cross-spawn@^5.0.1, cross-spawn@^5.1.0:
     lru-cache "^4.0.1"
     shebang-command "^1.2.0"
     which "^1.2.9"
+
+css-color-keywords@^1.0.0:
+  version "1.0.0"
+  resolved "https://zeissgroup.pkgs.visualstudio.com/_packaging/SIP/npm/registry/css-color-keywords/-/css-color-keywords-1.0.0.tgz#fea2616dc676b2962686b3af8dbdbe180b244e05"
+
+css-to-react-native@^2.0.3:
+  version "2.2.0"
+  resolved "https://zeissgroup.pkgs.visualstudio.com/_packaging/SIP/npm/registry/css-to-react-native/-/css-to-react-native-2.2.0.tgz#d524ef7f39a2747a8914e86563669ba35b7cf2e7"
+  dependencies:
+    css-color-keywords "^1.0.0"
+    fbjs "^0.8.5"
+    postcss-value-parser "^3.3.0"
 
 cssom@0.3.x, "cssom@>= 0.3.2 < 0.4.0":
   version "0.3.2"
@@ -963,7 +990,7 @@ fb-watchman@^2.0.0:
   dependencies:
     bser "^2.0.0"
 
-fbjs@^0.8.16:
+fbjs@^0.8.16, fbjs@^0.8.5, fbjs@^0.8.9:
   version "0.8.16"
   resolved "https://zeissgroup.pkgs.visualstudio.com/_packaging/SIP/npm/registry/fbjs/-/fbjs-0.8.16.tgz#5e67432f550dc41b572bf55847b8aca64e5337db"
   dependencies:
@@ -1214,6 +1241,10 @@ has-values@^1.0.0:
     is-number "^3.0.0"
     kind-of "^4.0.0"
 
+hoist-non-react-statics@^1.2.0:
+  version "1.2.0"
+  resolved "https://zeissgroup.pkgs.visualstudio.com/_packaging/SIP/npm/registry/hoist-non-react-statics/-/hoist-non-react-statics-1.2.0.tgz#aa448cf0986d55cc40773b17174b7dd066cb7cfb"
+
 home-or-tmp@^2.0.0:
   version "2.0.0"
   resolved "https://zeissgroup.pkgs.visualstudio.com/_packaging/SIP/npm/registry/home-or-tmp/-/home-or-tmp-2.0.0.tgz#e36c3f2d2cae7d746a857e38d18d5f32a7882db8"
@@ -1256,6 +1287,10 @@ iconv-lite@^0.4.4, iconv-lite@~0.4.13:
   resolved "https://zeissgroup.pkgs.visualstudio.com/_packaging/SIP/npm/registry/iconv-lite/-/iconv-lite-0.4.23.tgz#297871f63be507adcfbfca715d0cd0eed84e9a63"
   dependencies:
     safer-buffer ">= 2.1.2 < 3"
+
+ieee754@^1.1.4:
+  version "1.1.11"
+  resolved "https://zeissgroup.pkgs.visualstudio.com/_packaging/SIP/npm/registry/ieee754/-/ieee754-1.1.11.tgz#c16384ffe00f5b7835824e67b6f2bd44a5229455"
 
 ignore-walk@^3.0.1:
   version "3.0.1"
@@ -2409,6 +2444,10 @@ posix-character-classes@^0.1.0:
   version "0.1.1"
   resolved "https://zeissgroup.pkgs.visualstudio.com/_packaging/SIP/npm/registry/posix-character-classes/-/posix-character-classes-0.1.1.tgz#01eac0fe3b5af71a2a6c02feabb8c1fef7e00eab"
 
+postcss-value-parser@^3.3.0:
+  version "3.3.0"
+  resolved "https://zeissgroup.pkgs.visualstudio.com/_packaging/SIP/npm/registry/postcss-value-parser/-/postcss-value-parser-3.3.0.tgz#87f38f9f18f774a4ab4c8a232f5c5ce8872a9d15"
+
 prelude-ls@~1.1.2:
   version "1.1.2"
   resolved "https://zeissgroup.pkgs.visualstudio.com/_packaging/SIP/npm/registry/prelude-ls/-/prelude-ls-1.1.2.tgz#21932a549f5e52ffd9a827f570e04be62a97da54"
@@ -2442,7 +2481,7 @@ promise@^7.1.1:
   dependencies:
     asap "~2.0.3"
 
-prop-types@^15.6.0:
+prop-types@^15.5.4, prop-types@^15.6.0:
   version "15.6.1"
   resolved "https://zeissgroup.pkgs.visualstudio.com/_packaging/SIP/npm/registry/prop-types/-/prop-types-15.6.1.tgz#36644453564255ddda391191fb3a125cbdf654ca"
   dependencies:
@@ -2941,6 +2980,23 @@ strip-json-comments@~2.0.1:
   version "2.0.1"
   resolved "https://zeissgroup.pkgs.visualstudio.com/_packaging/SIP/npm/registry/strip-json-comments/-/strip-json-comments-2.0.1.tgz#3c531942e908c2697c0ec344858c286c7ca0a60a"
 
+styled-components@2.4:
+  version "2.4.0"
+  resolved "https://zeissgroup.pkgs.visualstudio.com/_packaging/SIP/npm/registry/styled-components/-/styled-components-2.4.0.tgz#086d0fd483d54638837fca3ea546a030b94adf75"
+  dependencies:
+    buffer "^5.0.3"
+    css-to-react-native "^2.0.3"
+    fbjs "^0.8.9"
+    hoist-non-react-statics "^1.2.0"
+    is-plain-object "^2.0.1"
+    prop-types "^15.5.4"
+    stylis "^3.4.0"
+    supports-color "^3.2.3"
+
+stylis@^3.4.0:
+  version "3.5.0"
+  resolved "https://zeissgroup.pkgs.visualstudio.com/_packaging/SIP/npm/registry/stylis/-/stylis-3.5.0.tgz#016fa239663d77f868fef5b67cf201c4b7c701e1"
+
 subarg@^1.0.0:
   version "1.0.0"
   resolved "https://zeissgroup.pkgs.visualstudio.com/_packaging/SIP/npm/registry/subarg/-/subarg-1.0.0.tgz#f62cf17581e996b48fc965699f54c06ae268b8d2"
@@ -2951,7 +3007,7 @@ supports-color@^2.0.0:
   version "2.0.0"
   resolved "https://zeissgroup.pkgs.visualstudio.com/_packaging/SIP/npm/registry/supports-color/-/supports-color-2.0.0.tgz#535d045ce6b6363fa40117084629995e9df324c7"
 
-supports-color@^3.1.2:
+supports-color@^3.1.2, supports-color@^3.2.3:
   version "3.2.3"
   resolved "https://zeissgroup.pkgs.visualstudio.com/_packaging/SIP/npm/registry/supports-color/-/supports-color-3.2.3.tgz#65ac0504b3954171d8a64946b2ae3cbb8a5f54f6"
   dependencies:
