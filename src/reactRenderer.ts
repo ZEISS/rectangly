@@ -66,7 +66,7 @@ function convertReact(node: CustomReactNode): React.ReactNode {
 
 function log(...args: Array<any>) {
   if (process.env.NODE_ENV !== 'production') {
-    console.log(args);
+    console.log(...args);
   }
 }
 
@@ -102,7 +102,7 @@ export class ReactRenderer extends Renderer2 {
   constructor(context: any, rootElementSelector?: ComponentRegistryEntry | any) {
     super();
 
-    if (typeof rootElementSelector === 'object') {
+    if (typeof rootElementSelector === 'object' && rootElementSelector.prefix && rootElementSelector.components) {
       registerComponents(rootElementSelector.prefix, rootElementSelector.components);
     } else if (typeof rootElementSelector === 'function') {
       this.rootElementSelector = rootElementSelector;
