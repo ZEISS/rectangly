@@ -1,0 +1,33 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist/",
+    "sourceMap": true,
+    "noImplicitAny": true,
+    "allowUnreachableCode": false,
+    "alwaysStrict": true,
+    "strictNullChecks": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "module": "commonjs",
+    "target": "es6",
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "lib": [
+      "dom",
+      "esnext.asynciterable",
+      "es2015"
+    ],
+    "jsx": "react",
+    "suppressImplicitAnyIndexErrors": true,
+    "allowSyntheticDefaultImports": false
+  },
+  "include": [
+    "./src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "**/*.test.tsx",
+    "**/*.test.ts"
+  ]
+}

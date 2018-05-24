@@ -1,20 +1,60 @@
-# Introduction 
-TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
+# rectangly
 
-# Getting Started
-TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
-1.	Installation process
-2.	Software dependencies
-3.	Latest releases
-4.	API references
+Custom Angular renderer
 
-# Build and Test
-TODO: Describe and show how to build your code and run the tests. 
+## Installation
 
-# Contribute
-TODO: Explain how other users and developers can contribute to make your code better. 
+Make sure to have yarn globally installed (`npm install yarn -g`). Now run:
 
-If you want to learn more about creating good readme files then refer the following [guidelines](https://www.visualstudio.com/en-us/docs/git/create-a-readme). You can also seek inspiration from the below readme files:
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)
+```sh
+yarn install
+```
+
+This will resolve and install all (development) dependencies.
+
+
+## Examples
+
+Running the tests is as simple as typing:
+
+```sh
+yarn test
+```
+
+This will also run the linter. The standalone unit tests are available via `test:unit`. Likewise, we can also easily report the code coverage:
+
+```sh
+yarn test:unit --coverage
+```
+
+## Versioning
+
+Incrementing the version can be done via `yarn` as well.
+
+```sh
+yarn version
+```
+
+This will show the current version and ask for a new version. As a result the information in the package.json is updated. Additionally, a git tag is created with the information (automatically prefixed using a "v"). The process could also be automated, e.g., by specifying the new version directly. So, for instance if our new version is "1.2.3" we just use the following command:
+
+```sh
+yarn version --new-version 1.2.3
+```
+
+## Documentation
+
+(tbd)
+
+## Contributing
+
+Contributions are welcome and happily reviewed / accepted via pull requests. For more details read [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## Changelog
+
+A changelog exists, which should be rather complete from a high-level point of view. See [CHANGELOG.md](CHANGELOG.md).
+
+## License
+
+MIT © [DCC SIP Team](developer.zeiss.com)
+[LICENSE](LICENSE.md)
+
