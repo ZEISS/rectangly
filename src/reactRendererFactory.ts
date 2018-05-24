@@ -19,16 +19,13 @@ export class ReactRendererFactory extends RendererFactory2 {
     return this.renderer;
   }
 
-  begin() {
-    return undefined;
-  }
+  begin() {}
 
   end() {
     this.renderer.render();
-    return undefined;
   }
 
   whenRenderingDone(): Promise<any> {
-    return Promise.resolve(undefined);
+    return Promise.resolve();
   }
 }

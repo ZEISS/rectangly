@@ -1,10 +1,11 @@
-import { ReactRenderer, registerComponents } from './reactRenderer';
+import { ReactRenderer } from './reactRenderer';
+import { registerComponents, unregisterComponents } from './registry';
 import * as Pharos from '@zeiss/pharos';
 
 describe('ReactRenderer', () => {
   it('should return registered Pharos component', () => {
-    const renderer = new ReactRenderer({});
     registerComponents('z', Pharos);
+    const renderer = new ReactRenderer({});
     const element = renderer.createElement('z-Badge');
     expect(element.type).toEqual(Pharos['Badge']);
   });
@@ -23,5 +24,12 @@ describe('ReactRenderer', () => {
     const element = renderer.createElement('foo-bar');
     expect(mockCallback).toBeCalled();
     expect(element.type).toEqual('foo-bar');
+  });
+
+  it('should be possible to unregister component as well', () => {
+    unregisterComponents('z');
+    const renderer = new ReactRenderer({});
+    const element = renderer.createElement('z-Badge');
+    expect(element.type).toEqual('z-Badge');
   });
 });

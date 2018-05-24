@@ -12,6 +12,7 @@ import {
 import * as React from 'react';
 import { render } from 'react-dom';
 import { createContextProvider } from './contextProvider';
+import { componentRegistry, getComponent, registerComponents } from './registry';
 import { ComponentRegistryEntry } from './types';
 
 interface CustomReactElement {
@@ -70,22 +71,6 @@ function log(...args: Array<any>) {
   }
 }
 
-const componentRegistry = {};
-
-function getComponent(name: string, prefix?: string) {
-  const components = prefix && componentRegistry[prefix];
-  if (components && components[name]) {
-    return components[name];
-  }
-  return undefined;
-}
-
-export function registerComponents(prefix: string, components: { [name: string]: any }) {
-  if (!componentRegistry[prefix]) {
-    componentRegistry[prefix] = components;
-  }
-}
-
 export class ReactRenderer extends Renderer2 {
   data: { [key: string]: any };
   private root: Element | null;
@@ -114,10 +99,11 @@ export class ReactRenderer extends Renderer2 {
     log('createElement', name, namespace);
     const prefix = name.indexOf('-') ? name.substr(0, name.indexOf('-')) : undefined;
     const cleanName = prefix && prefix.length ? name.substr(prefix.length + 1) : name;
-    const type =
-      (this.rootElementSelector && this.rootElementSelector(prefix, cleanName)) ||
-      getComponent(cleanName, prefix) ||
-      name;
+    const type = !prefix
+      ? name
+      : (this.rootElementSelector && this.rootElementSelector(prefix, cleanName)) ||
+        getComponent(prefix, cleanName) ||
+        name;
 
     return {
       kind: 'element',

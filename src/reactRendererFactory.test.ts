@@ -6,7 +6,6 @@ describe('ReactRendererFactory', () => {
     const factory = new ReactRendererFactory({}, { prefix: 'z', components: Pharos });
     const renderer = factory.createRenderer();
     const element = renderer.createElement('z-Avatar');
-    console.log(element);
     expect(element.type).toEqual(Pharos['Avatar']);
   });
 
