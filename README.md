@@ -1,6 +1,6 @@
 # rectangly
 
-Custom Angulare renderer
+Custom Angular renderer
 
 ## Installation
 
@@ -12,21 +12,10 @@ yarn install
 
 This will resolve and install all (development) dependencies.
 
-## Usage
-
-Here is a quick example to get you started. All you need is to run:
-
-```sh
-yarn start
-```
-
-As a result this will start the development server, which runs locally and can be reached via [localhost:9000](http://localhost:9000). The port can be changed from the command line options. The used configuration is displayed in the line starting with "Project is running at".
 
 ## Examples
 
-The boilerplate comes with an example HTML page (src/index.html) and an example component (src/components/Hello) that is exposed in the example application (src/index.tsx). Make sure to remove or adjust the parts you don't use.
-
-An example unit test can be found in src/components/Hello/Hello.test.tsx. Running the tests is as simple as typing:
+Running the tests is as simple as typing:
 
 ```sh
 yarn test
