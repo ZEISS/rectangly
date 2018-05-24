@@ -7,7 +7,7 @@ describe('ReactRenderer', () => {
     registerComponents('z', Pharos);
     const renderer = new ReactRenderer({});
     const element = renderer.createElement('z-Badge');
-    expect(element.type).toEqual(Pharos['Badge']);
+    expect(element.type).toEqual(Pharos.Badge);
   });
 
   it('should called specified root element selector function', () => {
