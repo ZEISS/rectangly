@@ -1,9 +1,10 @@
 import { ClassProvider, RendererFactory2 } from '@angular/core';
-import { ReactRendererFactory } from './reactRendererFactory';
-import { ReactRenderer } from './reactRenderer';
+import { ReactRenderer } from './ReactRenderer';
+import { ReactRendererFactory } from './ReactRendererFactory';
+
+export * from './types';
 
 export { ReactRendererFactory, ReactRenderer };
-export { ComponentRegistryEntry } from './types';
 export { registerComponents, unregisterComponents } from './registry';
 
 export const Rectangly: ClassProvider = {

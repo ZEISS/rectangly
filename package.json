@@ -1,25 +1,16 @@
 {
   "name": "rectangly",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Custom Angular renderer",
   "homepage": "https://rectangly.io",
   "author": {
     "name": "DCC SIP Team",
     "email": "dcc@zeiss.com",
-    "url": "developer.zeiss.com"
+    "url": "https://developer.zeiss.services"
   },
   "main": "dist",
   "types": "dist",
-  "keywords": [
-    "custom",
-    "angular",
-    "renderer",
-    "zeiss",
-    "sip",
-    "dcc",
-    "library",
-    "lib"
-  ],
+  "keywords": ["custom", "angular", "renderer", "zeiss", "sip", "dcc", "library", "lib"],
   "devDependencies": {
     "@angular/core": "^6.0.3",
     "@types/jest": "^21.1.2",

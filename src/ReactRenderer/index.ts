@@ -1,19 +1,19 @@
-import {
-  Injectable,
-  Renderer,
-  RootRenderer,
-  RenderComponentType,
-  RendererFactory2,
-  Renderer2,
-  RendererType2,
-  RendererStyleFlags2,
-  Inject,
-} from '@angular/core';
 import * as React from 'react';
+import { getComponent, registerComponents, getCustomComponent } from '../registry';
+import {
+  Inject,
+  Injectable,
+  RenderComponentType,
+  Renderer,
+  Renderer2,
+  RendererFactory2,
+  RendererStyleFlags2,
+  RendererType2,
+  RootRenderer,
+} from '@angular/core';
+import { ComponentSelector, CustomComponents } from '../types';
+import { createContextProvider } from '../createContextProvider';
 import { render } from 'react-dom';
-import { createContextProvider } from './contextProvider';
-import { componentRegistry, getComponent, registerComponents } from './registry';
-import { ComponentRegistryEntry } from './types';
 
 interface CustomReactElement {
   kind: 'element';
@@ -40,7 +40,9 @@ function findParent(parent: CustomReactElement, node: CustomReactNode): CustomRe
   for (const child of parent.children) {
     if (node === child) {
       return parent;
-    } else if (child.kind === 'element') {
+    }
+
+    if (child.kind === 'element') {
       const p = findParent(child, node);
 
       if (p) {
@@ -49,24 +51,38 @@ function findParent(parent: CustomReactElement, node: CustomReactNode): CustomRe
     }
   }
 
-  return undefined;
+  return;
 }
 
-function convertReact(node: CustomReactNode): React.ReactNode {
-  if (node) {
-    if (node.kind === 'element') {
-      const children = node.children.map(convertReact);
-      return React.createElement(node.type, node.props, ...children);
-    } else if (node.kind === 'primitive') {
-      return node.value;
-    }
+function convertReact(node: CustomReactNode): React.ReactNode | undefined {
+  if (node.kind === 'element') {
+    const children = node.children.map(convertReact);
+    return React.createElement(node.type, node.props, ...children);
+  }
+
+  if (node.kind === 'primitive') {
+    return node.value;
   }
 
   return undefined;
 }
 
+function getComponentCallback(elementSelector?: CustomComponents): ComponentSelector {
+  if (elementSelector) {
+    if (typeof elementSelector === 'object') {
+      return (prefix, name) => getCustomComponent(elementSelector, prefix, name);
+    }
+
+    if (typeof elementSelector === 'function') {
+      return elementSelector;
+    }
+  }
+
+  return getComponent;
+}
+
 function log(...args: Array<any>) {
-  if (process.env.NODE_ENV !== 'production') {
+  if (process.env.NODE_ENV === 'development') {
     console.log(...args);
   }
 }
@@ -82,32 +98,22 @@ export class ReactRenderer extends Renderer2 {
   };
   private sid = 0;
   private provider: React.ComponentType<any>;
-  private rootElementSelector: any | undefined;
+  private getComponent: ComponentSelector;
 
-  constructor(context: any, rootElementSelector?: ComponentRegistryEntry | any) {
+  constructor(context: any, elementSelector?: CustomComponents) {
     super();
-
-    if (typeof rootElementSelector === 'object' && rootElementSelector.prefix && rootElementSelector.components) {
-      registerComponents(rootElementSelector.prefix, rootElementSelector.components);
-    } else if (typeof rootElementSelector === 'function') {
-      this.rootElementSelector = rootElementSelector;
-    }
+    this.getComponent = getComponentCallback(elementSelector);
     this.provider = createContextProvider(context);
   }
 
   createElement(name: string, namespace?: string | null | undefined): any {
     log('createElement', name, namespace);
-    const prefix = name.indexOf('-') ? name.substr(0, name.indexOf('-')) : undefined;
-    const cleanName = prefix && prefix.length ? name.substr(prefix.length + 1) : name;
-    const type = !prefix
-      ? name
-      : (this.rootElementSelector && this.rootElementSelector(prefix, cleanName)) ||
-        getComponent(prefix, cleanName) ||
-        name;
+    const [cleanName, prefix] = name.split('-').reverse();
+    const type = (prefix ? this.getComponent(prefix, cleanName) : name) || name;
 
     return {
+      type,
       kind: 'element',
-      type: type,
       children: [],
       props: {
         key: this.nextKey(),
@@ -118,8 +124,8 @@ export class ReactRenderer extends Renderer2 {
   createText(value: string): any {
     log('createText', value);
     return {
-      kind: 'primitive',
       value,
+      kind: 'primitive',
     };
   }
 
@@ -134,15 +140,15 @@ export class ReactRenderer extends Renderer2 {
 
     this.element.children = [];
     this.element.props = {};
+
     return this.element;
   }
 
   listen(target: any, eventName: string, callback: (event: any) => boolean | void): () => void {
     log('listen', target, eventName, callback);
     target.props[eventName] = callback;
-    return () => {
-      this.setProperty(target, eventName, undefined);
-    };
+
+    return () => this.setProperty(target, eventName, undefined);
   }
 
   destroy(): void {
@@ -156,8 +162,8 @@ export class ReactRenderer extends Renderer2 {
   createComment(value: string): any {
     log('createComment', value);
     return {
-      kind: 'comment',
       value,
+      kind: 'comment',
     };
   }
 
@@ -194,8 +200,6 @@ export class ReactRenderer extends Renderer2 {
       const index = parent.children.indexOf(node);
       return parent.children[index + 1];
     }
-
-    return undefined;
   }
 
   setAttribute(el: any, name: string, value: string, namespace?: string | null | undefined): void {
@@ -204,7 +208,8 @@ export class ReactRenderer extends Renderer2 {
   }
 
   private nextKey() {
-    return (this.sid++).toString();
+    this.sid++;
+    return this.sid.toString();
   }
 
   render() {
@@ -224,25 +229,20 @@ export class ReactRenderer extends Renderer2 {
 
   addClass(el: any, name: string): void {
     log('addClass', el, name);
-    const cls = el.props.className || '';
-    const classes = cls.split(' ');
 
-    if (classes.indexOf(name) === -1) {
-      classes.push(name);
-      el.props.className = classes.join(' ');
+    if (!el.props.className || !el.props.className.match(name)) {
+      el.props.className = `${el.props.className || ''} ${name}`.trim();
     }
   }
 
   removeClass(el: any, name: string): void {
     log('removeClass', el, name);
-    const cls = el.props.className || '';
-    const classes = cls.split(' ');
-    const index = classes.indexOf(name);
 
-    if (index !== -1) {
-      classes.splice(index, 1);
-      el.props.className = classes.join(' ');
+    if (!el.props.className) {
+      return;
     }
+
+    el.props.className = el.props.className.replace(name, '').trim();
   }
 
   setStyle(el: any, style: string, value: any, flags?: RendererStyleFlags2 | undefined): void {

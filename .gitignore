@@ -63,6 +63,9 @@ typings/
 # Editor files
 .idea
 .vscode
+*.sublime-project
+*.sublime-workspace
 
 # misc
 .DS_Store
+

@@ -1,6 +1,6 @@
-import { RendererFactory2, Renderer2, RendererType2, Inject, Type, Optional } from '@angular/core';
-import { ReactRenderer } from './reactRenderer';
-import { ComponentRegistryEntry } from './types';
+import { Inject, Optional, Renderer2, RendererFactory2, RendererType2, Type } from '@angular/core';
+import { CustomComponents } from '../types';
+import { ReactRenderer } from '../ReactRenderer';
 
 export class ReactRendererFactory extends RendererFactory2 {
   private readonly renderer: ReactRenderer;
@@ -8,8 +8,8 @@ export class ReactRendererFactory extends RendererFactory2 {
   constructor(
     @Inject('Context') ctx: any,
     @Optional()
-    @Inject('RootElementSelector')
-    selector: (prefix: string, name: string) => any | ComponentRegistryEntry,
+    @Inject('ElementSelector')
+    selector: CustomComponents,
   ) {
     super();
     this.renderer = new ReactRenderer(ctx, selector);
