@@ -12,13 +12,15 @@ export const Rectangly: ClassProvider = {
   useClass: ReactRendererFactory,
 };
 
-export function createModuleBasedOn(baseModule: any) {
+export declare class RectanglyModule {}
+
+export function createModuleBasedOn(baseModule: any): RectanglyModule {
   @NgModule({
     imports: [baseModule],
     exports: [baseModule],
     providers: [Rectangly],
   })
-  class RectanglyModule {}
+  class RectanglyModuleInt {}
 
-  return RectanglyModule;
+  return RectanglyModuleInt;
 }
