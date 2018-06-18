@@ -1,71 +1,12 @@
 import * as React from 'react';
-import { getComponent, registerComponents, getCustomComponent } from '../registry';
-import {
-  Inject,
-  Injectable,
-  RenderComponentType,
-  Renderer,
-  Renderer2,
-  RendererFactory2,
-  RendererStyleFlags2,
-  RendererType2,
-  RootRenderer,
-} from '@angular/core';
+import { getComponent, getCustomComponent } from '../registry';
+import { Renderer2, RendererStyleFlags2, NgZone } from '@angular/core';
 import { ComponentSelector, CustomComponents } from '../types';
 import { createContextProvider } from '../createContextProvider';
 import { render } from 'react-dom';
-
-interface CustomReactElement {
-  kind: 'element';
-  type: any;
-  props: {
-    [x: string]: any;
-  };
-  children: Array<CustomReactNode>;
-}
-
-interface CustomReactPrimitive {
-  kind: 'primitive';
-  value: string | number | boolean | null | undefined;
-}
-
-interface CustomReactComment {
-  kind: 'comment';
-  value: string;
-}
-
-type CustomReactNode = CustomReactElement | CustomReactPrimitive | CustomReactComment;
-
-function findParent(parent: CustomReactElement, node: CustomReactNode): CustomReactElement | undefined {
-  for (const child of parent.children) {
-    if (node === child) {
-      return parent;
-    }
-
-    if (child.kind === 'element') {
-      const p = findParent(child, node);
-
-      if (p) {
-        return p;
-      }
-    }
-  }
-
-  return;
-}
-
-function convertReact(node: CustomReactNode): React.ReactNode | undefined {
-  if (node.kind === 'element') {
-    const children = node.children.map(convertReact);
-    return React.createElement(node.type, node.props, ...children);
-  }
-
-  if (node.kind === 'primitive') {
-    return node.value;
-  }
-
-  return undefined;
-}
+import { CustomReactElement } from './tree-types';
+import { ReactTree } from './react-tree';
+import { findParent } from './tree-tools';
 
 function getComponentCallback(elementSelector?: CustomComponents): ComponentSelector {
   if (elementSelector) {
@@ -96,11 +37,12 @@ export class ReactRenderer extends Renderer2 {
     children: [],
     props: {},
   };
+  private update: (() => void) | undefined;
   private sid = 0;
   private provider: React.ComponentType<any>;
   private getComponent: ComponentSelector;
 
-  constructor(context: any, elementSelector?: CustomComponents) {
+  constructor(context: any, private zone: NgZone, elementSelector?: CustomComponents) {
     super();
     this.getComponent = getComponentCallback(elementSelector);
     this.provider = createContextProvider(context);
@@ -146,7 +88,13 @@ export class ReactRenderer extends Renderer2 {
 
   listen(target: any, eventName: string, callback: (event: any) => boolean | void): () => void {
     log('listen', target, eventName, callback);
-    target.props[eventName] = callback;
+    const zone = this.zone;
+
+    target.props[eventName] = zone
+      ? function(...args: Array<any>) {
+          return zone.run(callback, this, args);
+        }
+      : callback;
 
     return () => this.setProperty(target, eventName, undefined);
   }
@@ -205,18 +153,10 @@ export class ReactRenderer extends Renderer2 {
   setAttribute(el: any, name: string, value: string, namespace?: string | null | undefined): void {
     log('setAttribute', el, name, value, namespace);
     el.props[name] = value;
-  }
 
-  private nextKey() {
-    this.sid++;
-    return this.sid.toString();
-  }
-
-  render() {
-    log('Rendering ...');
-    const elements = this.element.children.map(convertReact);
-    const context = React.createElement(this.provider, undefined, elements);
-    render(context, this.root);
+    if (el === this.element) {
+      this.setupRender();
+    }
   }
 
   removeAttribute(el: any, name: string, namespace?: string | null | undefined): void {
@@ -274,5 +214,31 @@ export class ReactRenderer extends Renderer2 {
   setValue(node: any, value: string): void {
     log('setValue', node, value);
     node.value = value;
+  }
+
+  notify() {
+    const u = this.update;
+    u && u();
+  }
+
+  private subscribe = (subscriber: () => void) => {
+    this.update = subscriber;
+    return () => {
+      this.update = undefined;
+    };
+  };
+
+  private setupRender() {
+    const tree = React.createElement(ReactTree, {
+      root: this.element,
+      notify: this.subscribe,
+    });
+    const context = React.createElement(this.provider, undefined, tree);
+    render(context, this.root);
+  }
+
+  private nextKey() {
+    this.sid++;
+    return this.sid.toString();
   }
 }

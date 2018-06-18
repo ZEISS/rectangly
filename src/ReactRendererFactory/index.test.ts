@@ -3,7 +3,7 @@ import { ReactRendererFactory } from '.';
 
 describe('ReactRendererFactory', () => {
   it('create renderer by passing registry entry', () => {
-    const factory = new ReactRendererFactory({}, { z: Pharos });
+    const factory = new ReactRendererFactory({}, undefined, { z: Pharos });
     const renderer = factory.createRenderer(undefined, undefined);
     const element = renderer.createElement('z-Avatar');
     expect(element.type).toEqual(Pharos.Avatar);
@@ -11,7 +11,7 @@ describe('ReactRendererFactory', () => {
 
   it('create renderer by passing callback function', () => {
     const mockCallback = jest.fn((prefix: string, name: string) => `${prefix}-${name}`);
-    const factory = new ReactRendererFactory({}, mockCallback);
+    const factory = new ReactRendererFactory({}, undefined, mockCallback);
     const renderer = factory.createRenderer(undefined, undefined);
     const element = renderer.createElement('dcc-team');
     expect(mockCallback).toBeCalled();

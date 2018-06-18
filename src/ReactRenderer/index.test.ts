@@ -5,7 +5,7 @@ import { ReactRenderer } from '.';
 describe('ReactRenderer', () => {
   it('should return registered Pharos component', () => {
     registerComponents('z', Pharos);
-    const renderer = new ReactRenderer({});
+    const renderer = new ReactRenderer({}, undefined);
     const element = renderer.createElement('z-Badge');
     expect(element.type).toEqual(Pharos.Badge);
 
@@ -17,7 +17,7 @@ describe('ReactRenderer', () => {
 
   it('should called specified root element selector function', () => {
     const mockCallback = jest.fn();
-    const renderer = new ReactRenderer({}, mockCallback);
+    const renderer = new ReactRenderer({}, undefined, mockCallback);
     const element = renderer.createElement('z-Badge');
     expect(mockCallback).toBeCalled();
     expect(mockCallback).toBeCalledWith('z', 'Badge');
@@ -25,7 +25,7 @@ describe('ReactRenderer', () => {
 
   it('should use the element name', () => {
     const mockCallback = jest.fn(cb => undefined);
-    const renderer = new ReactRenderer({}, mockCallback);
+    const renderer = new ReactRenderer({}, undefined, mockCallback);
     const element = renderer.createElement('foo-bar');
     expect(mockCallback).toBeCalled();
     expect(element.type).toEqual('foo-bar');
@@ -33,14 +33,14 @@ describe('ReactRenderer', () => {
 
   it('should be possible to unregister component as well', () => {
     unregisterComponents('z');
-    const renderer = new ReactRenderer({});
+    const renderer = new ReactRenderer({}, undefined);
     const element = renderer.createElement('z-Badge');
     expect(element.type).toEqual('z-Badge');
   });
 
   let renderer;
   beforeEach(() => {
-    renderer = new ReactRenderer({});
+    renderer = new ReactRenderer({}, undefined);
   });
 
   afterEach(() => {
