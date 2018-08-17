@@ -2,7 +2,7 @@
   "name": "rectangly",
   "version": "0.3.0",
   "description": "A custom Angular 4+ renderer to use React for displaying the views.",
-  "homepage": "https://rectangly.io",
+  "homepage": "https://zeiss.github.io",
   "author": {
     "name": "ZEISS Digital Innovation Partners",
     "email": "sip.de.muc@zeiss.com",
