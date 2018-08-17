@@ -1,20 +1,7 @@
-import * as Pharos from '@zeiss/pharos';
 import { registerComponents, unregisterComponents } from '../registry';
 import { ReactRenderer } from '.';
 
 describe('ReactRenderer', () => {
-  it('should return registered Pharos component', () => {
-    registerComponents('z', Pharos);
-    const renderer = new ReactRenderer({}, undefined);
-    const element = renderer.createElement('z-Badge');
-    expect(element.type).toEqual(Pharos.Badge);
-
-    // tslint:disable-next-line:no-null-keyword
-    const renderer2 = new ReactRenderer({}, null);
-    const element2 = renderer.createElement('z-Badge');
-    expect(element2.type).toEqual(Pharos.Badge);
-  });
-
   it('should called specified root element selector function', () => {
     const mockCallback = jest.fn();
     const renderer = new ReactRenderer({}, undefined, mockCallback);

@@ -1,5 +1,5 @@
 module.exports = {
-  setupFiles: ['./test/unit/temp-polyfills.ts','./test/unit/setup.ts'],
+  setupFiles: ['./test/temp-polyfills.ts','./test/setup.ts'],
   transform: {
     '^.+\\.(ts|tsx?)$': './node_modules/ts-jest/preprocessor.js',
   },
@@ -18,8 +18,5 @@ module.exports = {
   },
   transformIgnorePatterns: ['/node_modules/(?!lodash-es)'],
   testPathIgnorePatterns: [],
-  moduleNameMapper: {
-    '@zeiss/pharos': '<rootDir>/node_modules/@zeiss/pharos/dist/es5',
-  },
 };
 

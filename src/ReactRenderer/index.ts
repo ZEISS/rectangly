@@ -8,6 +8,8 @@ import { CustomReactElement } from './tree-types';
 import { ReactTree } from './react-tree';
 import { findParent } from './tree-tools';
 
+const log = process.env.NODE_ENV === 'development' ? console.log : (..._args: Array<any>) => {};
+
 function getComponentCallback(elementSelector?: CustomComponents): ComponentSelector {
   if (elementSelector) {
     if (typeof elementSelector === 'object') {
@@ -20,12 +22,6 @@ function getComponentCallback(elementSelector?: CustomComponents): ComponentSele
   }
 
   return getComponent;
-}
-
-function log(...args: Array<any>) {
-  if (process.env.NODE_ENV === 'development') {
-    console.log(...args);
-  }
 }
 
 export class ReactRenderer extends Renderer2 {

@@ -2,23 +2,23 @@
 
 In order to give your contribution to this projects, there are a couple of important things that each potential contributor should be aware of, and that's the purpose of this document, so please read it thoroughly through.
 
-The team rigorously reviews and tests all code submissions. The submissions must meet an extremely high bar for quality, design, and roadmap appropriateness.
+The team rigorously reviews and tests all code submissions. The submissions must meet a high bar for quality, design, and roadmap appropriateness.
 
 ## Who can contribute?
 
-Potentially, any SIP developer can become contributor, or other partner that SIP grants privilage, but it's important that she/he is aware of high quality standards that need to be met.
+Potentially, any developer can become contributor, or other partner that grants privilage, but it's important that she/he is aware of high quality standards that need to be met.
 
-External contributors are also welcome, even though their motivation and area of work must be communicated up front.
+For non-ZEISS contributors a contributor license agreement (abbr. CLA) must be signed.
 
 ## Branching
 
-Few facts about branching in this project. There is only one branch, `master`, and all other development is based on this branch. Release candidates and distribution versions are done by tagging master.
+There are two branches, `master` and `develop`. Release candidates are aggregated in `develop`, while distribution versions are done by pushing to `master`. Finally, each new release is marked by tagging `master`.
 
-Meaning, for developing new features and/or bug fixes, the master branch should be pulled and built upon.
+Meaning, for developing new features and/or bug fixes, the `develop` branch should be pulled and built upon.
 
 In case that you are branching for a known feature or a bug, please prefix your branch with the type, for example, `feature/name` or `bugfix/name`.
 
-Possible types:
+Possible types (this is a list of recommendations, you are not limited to these suggestions):
 
 | Type      | Description                                                                                            |
 | --------- | ------------------------------------------------------------------------------------------------------ |
@@ -30,10 +30,12 @@ Possible types:
 | test/     | Adding missing test                                                                                    |
 | chore/    | Changing to the build process or auxiliary tools and libraries such as documentation generation        |
 
-You can always create a new branch based on the upstream master. For convinience the following command can be used:
+You can always create a new branch based on the upstream `develop`. For convinience the following command can be used (change `my-branch` with the name of your branch):
 
 ```sh
-git checkout -b feature/my-branch -t origin/master
+git checkout -b feature/my-branch -t origin/develop
 ```
 
-Finally, after finishing the work make sure to pull from `master` again (to avoid conflicts) then push the branch (e.g., `feature/my-branch`) upstream.
+Ideally, the name of your branch also contains a GitHub issue number.
+
+Finally, after finishing the work make sure to pull from `develop` again (to avoid conflicts) then push the branch (e.g., `feature/my-branch`) upstream. Make sure to always target `develop` in your pull requests (PR). Since targets cannot be changed any PR to `master` needs to be abandoned.
